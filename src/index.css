@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: ChakraPetch-bold;
+  src: url("./assets/fonts/ChakraPetch-Bold.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-bold-italic;
+  src: url("./assets/fonts/ChakraPetch-BoldItalic.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-italic;
+  src: url("./assets/fonts/ChakraPetch-Italic.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-light;
+  src: url("./assets/fonts/ChakraPetch-Light.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-light-italic;
+  src: url("./assets/fonts/ChakraPetch-LightItalic.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-medium;
+  src: url("./assets/fonts/ChakraPetch-Medium.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-medium-italic;
+  src: url("./assets/fonts/ChakraPetch-MediumItalic.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-regular;
+  src: url("./assets/fonts/ChakraPetch-Regular.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-semibold;
+  src: url("./assets/fonts/ChakraPetch-SemiBold.ttf");
+}
+@font-face {
+  font-family: ChakraPetch-semibold-italic;
+  src: url("./assets/fonts/ChakraPetch-SemiBoldItalic.ttf");
+}
+@font-face {
+  font-family: ProtestStrike-regular;
+  src: url("./assets/fonts/ProtestStrike-Regular.ttf");
+}
+@font-face {
+  font-family: Type-machine;
+  src: url("./assets/fonts/Type-Machine.ttf");
+}
