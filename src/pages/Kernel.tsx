@@ -28,7 +28,7 @@ function Kernel() {
     axios.get('http://localhost:5000/features')
       .then(response => setFeatureColumns(new Set(response.data.features)))
       .catch(error => console.error('Error fetching feature columns:', error));
-  }, []);
+  });
 
   const fetchDataset = () => {
     const formData = new FormData();
