@@ -14,6 +14,7 @@ function Model() {
   const [modelDetails, setModelDetails] = useState<ModelDetails>();
   const [error, setError] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [tempSelectedModel, setTempSelectedModel] = useState('')
   useEffect(() => {
     axios
       .get("http://localhost:5000/models")
@@ -29,9 +30,9 @@ function Model() {
   useEffect(() => {
     if (selectedModel) {
       fetchModelDetails(selectedModel);
-      setSelectedModel('');
+      setSelectedModel("");
     }
-    if (modelDetails && isSubmitted){
+    if (modelDetails && isSubmitted) {
       showPublic();
     }
   }, [selectedModel, modelDetails]);
@@ -62,14 +63,31 @@ function Model() {
   const handleModelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     console.log("changed");
     setSelectedModel(event.target.value);
+    setTempSelectedModel(event.target.value);
     console.log("Selected Model:", event.target.value);
   };
 
   const handleClick = () => {
+    console.log("Submit button clicked");
     setIsSubmitted(true);
-    console.log("modelDetails", modelDetails);
-    // setSelectedModel('')
-    // setIsSubmitted(false);
+
+    if (!tempSelectedModel) {
+      console.error("No model selected");
+      // setError("No model selected");
+      return;
+    }
+
+    console.log("Selected model:", tempSelectedModel);
+
+    axios
+      .post("http://localhost:5000/models", { model: tempSelectedModel })
+      .then((response) => {
+        console.log("Model selection response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error submitting selected model:", error);
+        setError("Error submitting selected model");
+      });
   };
 
   const showPublic = () => {
