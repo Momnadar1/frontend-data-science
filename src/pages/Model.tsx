@@ -1,16 +1,24 @@
 import { useState, ReactNode, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 
+interface ModelDetails {
+  type: string;
+  description: string;
+  hyperparameters: { [key: string]: string };
+}
+
 function Model() {
   const [content, setContent] = useState<ReactNode | null>(null);
   const [models, setModels] = useState<string[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>('');
-
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [modelDetails, setModelDetails] = useState<ModelDetails>();
+  const [error, setError] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
   useEffect(() => {
     axios
       .get("http://localhost:5000/models")
       .then((response) => {
-        setModels(response.data.models)
+        setModels(response.data.models);
         console.log("List of models: ", response.data.models);
       })
       .catch((error) => {
@@ -19,20 +27,28 @@ function Model() {
   }, []);
 
   useEffect(() => {
-    if(selectedModel){
-        fetchModelDetails(selectedModel)
+    if (selectedModel) {
+      fetchModelDetails(selectedModel);
+      setSelectedModel('');
     }
-  }, [selectedModel])
+    if (modelDetails && isSubmitted){
+      showPublic();
+    }
+  }, [selectedModel, modelDetails]);
 
-  const fetchModelDetails = (model: string) => {
-    axios.post('http://localhost:5000/model_details', {'model': [model]})
-    .then((response) => {
-        console.log(response.data)
-    })
-    .catch((err) => {
-        console.error(err)
-    })
-  }
+  const fetchModelDetails = async (model: string) => {
+    await axios
+      .post("http://localhost:5000/model_details", { model: [model] })
+      .then((response) => {
+        // setIsSubmitted(true);
+        setModelDetails(response.data);
+        // console.log(modelDetails);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError("No model selected");
+      });
+  };
 
   const showPrivate = () => {
     console.log("private button is clicked");
@@ -44,10 +60,17 @@ function Model() {
   };
 
   const handleModelChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    console.log('changed')
-    setSelectedModel(event.target.value)
-    console.log('Selected Model:',event.target.value)
-  }
+    console.log("changed");
+    setSelectedModel(event.target.value);
+    console.log("Selected Model:", event.target.value);
+  };
+
+  const handleClick = () => {
+    setIsSubmitted(true);
+    console.log("modelDetails", modelDetails);
+    // setSelectedModel('')
+    // setIsSubmitted(false);
+  };
 
   const showPublic = () => {
     console.log("private button is clicked");
@@ -71,17 +94,40 @@ function Model() {
             </optgroup>
           </select>
           <button
-            // onClick={handleClick}
+            onClick={handleClick}
             className="text-black border border-slate-800 pr-10 pl-10 h-10 rounded-lg bg-slate-300"
           >
             Submit
           </button>
         </div>
+        {isSubmitted && modelDetails && (
+          <div>
+            <h1>Hellow</h1>
+            <h2>{selectedModel}</h2>
+            <p>
+              <strong>Type:</strong> {modelDetails.model.type}
+            </p>
+            <p>
+              <strong>Description:</strong> {modelDetails.model.description}
+            </p>
+            <p>
+              <strong>Hyperparameters:</strong>
+            </p>
+            <ul>
+              {Object.entries(modelDetails.model.hyperparameters).map(
+                ([key, value]) => (
+                  <li key={key}>
+                    <strong>{key}:</strong> {value}
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
+        {error && <div style={{ color: "red" }}>{error}</div>}
       </div>
     );
   };
-
-
 
   return (
     <div>
